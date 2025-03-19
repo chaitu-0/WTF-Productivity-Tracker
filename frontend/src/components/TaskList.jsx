@@ -1,75 +1,48 @@
 import { useState } from "react";
 import { FaPlus, FaTrash, FaCheck } from "react-icons/fa";
+import { useTasks } from "../context/TaskContext";  // 👈 Import useTasks
 
 const TaskList = () => {
-  const [tasks, setTasks] = useState([
-    { id: 1, text: "Complete React Component", completed: false },
-    { id: 2, text: "Fix Tailwind Styling", completed: false },
-  ]);
+  const { tasks, addTask, deleteTask, toggleComplete } = useTasks();  // 🎯 Use Global Task State
   const [newTask, setNewTask] = useState("");
 
-  const addTask = () => {
-    if (newTask.trim() === "") return;
-    setTasks([...tasks, { id: Date.now(), text: newTask, completed: false }]);
-    setNewTask("");
-  };
-
-  const toggleComplete = (id) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
-    );
-  };
-
-  const deleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
-  };
-
   return (
-    <div className="bg-white shadow-lg rounded-lg p-6 w-full">
-      <h2 className="text-xl font-bold mb-4">📌 Task List</h2>
-      <div className="flex mb-4">
+    <div className="bg-white p-4 rounded-lg shadow-md w-full max-w-md">
+      <h2 className="text-xl font-semibold mb-2">Task List</h2>
+
+      {/* Input & Add Button */}
+      <div className="flex mb-3">
         <input
           type="text"
-          className="border p-2 flex-1 rounded-l-md focus:outline-none"
-          placeholder="Add a new task..."
+          className="border p-2 flex-1 rounded-l-md"
+          placeholder="Add new task..."
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
         />
-        <button
-          className="bg-blue-500 text-white px-4 rounded-r-md hover:bg-blue-600"
-          onClick={addTask}
-        >
+        <button onClick={() => { addTask(newTask); setNewTask(""); }} className="bg-blue-500 text-white p-2 rounded-r-md hover:bg-blue-600">
           <FaPlus />
         </button>
       </div>
 
+      {/* Task List */}
       <ul>
-        {tasks.map((task) => (
-          <li
-            key={task.id}
-            className={`flex justify-between items-center p-2 mb-2 rounded-md ${
-              task.completed ? "bg-green-100 line-through" : "bg-gray-100"
-            }`}
-          >
-            <span>{task.text}</span>
-            <div className="flex gap-2">
-              <button
-                className="text-green-500 hover:text-green-700"
-                onClick={() => toggleComplete(task.id)}
-              >
+        {tasks.length === 0 ? (
+          <p className="text-gray-500">No tasks yet. Add one!</p>
+        ) : (
+          tasks.map((task) => (
+            <li key={task.id} className="flex justify-between items-center bg-gray-100 p-2 my-1 rounded-md">
+              <span className={`flex-1 ${task.completed ? "line-through text-gray-500" : ""}`}>
+                {task.text}
+              </span>
+              <button onClick={() => toggleComplete(task.id)} className="text-green-500 hover:text-green-700 mx-2">
                 <FaCheck />
               </button>
-              <button
-                className="text-red-500 hover:text-red-700"
-                onClick={() => deleteTask(task.id)}
-              >
+              <button onClick={() => deleteTask(task.id)} className="text-red-500 hover:text-red-700">
                 <FaTrash />
               </button>
-            </div>
-          </li>
-        ))}
+            </li>
+          ))
+        )}
       </ul>
     </div>
   );

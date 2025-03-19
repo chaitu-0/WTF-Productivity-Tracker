@@ -1,8 +1,10 @@
-import { FaMoon, FaSun } from "react-icons/fa";
+import { useTheme } from "../context/ThemeContext"; // 👈 Import useTheme
+import { FaMoon, FaSun } from "react-icons/fa"; // 👈 Icons for Light/Dark mode
 import { useState } from "react";
 
 function Header() {
   const [darkMode, setDarkMode] = useState(false);
+  
 
   return (
     <header className={`p-4 shadow-md ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>

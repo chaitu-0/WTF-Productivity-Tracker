@@ -1,32 +1,42 @@
 import { useState } from "react";
+import { FaUserEdit } from "react-icons/fa";
 
 const Profile = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const [user, setUser] = useState({
+    name: "Chaitanya Bhavar",
+    avatar: "https://via.placeholder.com/100", // Placeholder image
+    tasksCompleted: 12,
+    streak: 5,
+  });
+
+  const changeAvatar = () => {
+    const newAvatar = prompt("Enter new avatar URL:");
+    if (newAvatar) {
+      setUser({ ...user, avatar: newAvatar });
+    }
+  };
 
   return (
-    <div
-      className={`${
-        darkMode ? "bg-gray-900 text-white" : "bg-white"
-      } shadow-lg rounded-lg p-6 text-center transition-all`}
-    >
-      <div className="flex flex-col items-center">
+    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md mt-6 text-center">
+      <div className="relative">
         <img
-          src="https://i.pravatar.cc/100"
-          alt="Profile Avatar"
-          className="rounded-full w-20 h-20 border-4 border-blue-500 mb-4"
+          src={user.avatar}
+          alt="User Avatar"
+          className="w-24 h-24 mx-auto rounded-full border-4 border-blue-400 cursor-pointer hover:opacity-80 transition"
+          onClick={changeAvatar}
         />
-        <h2 className="text-xl font-bold">Chaitanya Bhavar 🚀</h2>
-        <p className="text-gray-500 dark:text-gray-400">Full Stack Developer</p>
-
-        <div className="mt-4">
-          <button
-            className="px-4 py-2 bg-blue-500 text-white rounded-md"
-            onClick={() => setDarkMode(!darkMode)}
-          >
-            {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
-          </button>
-        </div>
+        <FaUserEdit
+          className="absolute bottom-2 right-2 text-blue-500 cursor-pointer"
+          size={20}
+          onClick={changeAvatar}
+        />
       </div>
+      <h2 className="text-xl font-semibold mt-4">{user.name}</h2>
+      <p className="text-gray-500">Tasks Completed: {user.tasksCompleted}</p>
+      <p className="text-gray-500">🔥 Streak: {user.streak} days</p>
+      <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+        Edit Profile
+      </button>
     </div>
   );
 };
